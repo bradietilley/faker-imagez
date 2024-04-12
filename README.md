@@ -9,9 +9,13 @@
 
 FakerImagez provides an interface for other faker image generators.
 
+
 ## Repositories
 
+[Imagez](https://github.com/bradietilley/faker-imagez) available:
+
 - [Catz](https://github.com/bradietilley/faker-catz)
+- [Dogz](https://github.com/bradietilley/faker-dogz)
 
 
 ## Documentation
