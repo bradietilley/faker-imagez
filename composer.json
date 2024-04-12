@@ -1,6 +1,6 @@
 {
   "name": "bradietilley/faker-imagez",
-  "description": "Faker for cat profile pics",
+  "description": "Base system for providing faker images",
   "type": "library",
   "license": "MIT",
   "autoload": {

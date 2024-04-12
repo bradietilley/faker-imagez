@@ -42,6 +42,7 @@ abstract class Imagez
      */
     public static function instance(): static
     {
+        /** @phpstan-ignore-next-line */
         return static::$instance ??= new static();
     }
 
