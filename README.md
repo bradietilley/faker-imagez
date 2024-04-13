@@ -146,6 +146,21 @@ imagez()->replaceAll($all);
 imagez()->path();                             // Will never include image #23452
 ```
 
+**Combining generators**
+
+Maybe you like catz and dogz and foodz and want your placeholders/avatars to include multiple sources. This can be achieved easily:
+
+```php
+$generator = catz()->combine(dogz(), foodz());
+// or
+$generator = CombineImagez::make(catz(), dogz(), foodz());
+
+// Then interact with it as you otherwise would:
+$generator->path();                           // path to a dog image
+$generator->path();                           // path to a cat image
+$generator->path();                           // path to a food image
+```
+
 ## Roadmap
 
 - May add customisable filtering like `imagez()->red()->path()` and `imagez()->red()->iterate()->getCurrentImagePath()`
