@@ -4,10 +4,10 @@ namespace Tests\Fixtures;
 
 use BradieTilley\FakerImagez\Imagez;
 
-class Examplez extends Imagez
+class DogSampleImagez extends Imagez
 {
     public static function basePath(): string
     {
-        return __DIR__.DIRECTORY_SEPARATOR.'images';
+        return __DIR__.DIRECTORY_SEPARATOR.'dogs';
     }
 }

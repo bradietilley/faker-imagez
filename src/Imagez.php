@@ -19,7 +19,7 @@ abstract class Imagez
     /**
      * Stores the current singleton instance
      */
-    protected static ?self $instance = null;
+    protected static array $instances = [];
 
     /**
      * The complete set of images
@@ -46,7 +46,7 @@ abstract class Imagez
     public static function instance(): static
     {
         /** @phpstan-ignore-next-line */
-        return static::$instance ??= new static();
+        return self::$instances[static::class] ??= new static();
     }
 
     /**
@@ -228,6 +228,14 @@ abstract class Imagez
     public function throw(string $message): never
     {
         throw ImagezException::make(sprintf('%s: %s', $this::class, $message));
+    }
+
+    /**
+     * Combine this imagez generator with the given imagez generator(s)
+     */
+    public function combine(Imagez ...$imagez): CombineImagez
+    {
+        return CombineImagez::make($this, ...$imagez);
     }
 
     /**
