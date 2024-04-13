@@ -2,6 +2,8 @@
 
 namespace BradieTilley\FakerImagez;
 
+use BradieTilley\FakerImagez\Exceptions\ImagezException;
+
 class CombineImagez extends Imagez
 {
     /**
@@ -32,6 +34,6 @@ class CombineImagez extends Imagez
      */
     public static function basePath(): string
     {
-        return '/dev/null';
+        throw ImagezException::make('CombinerImagez should not run the basePath() method');
     }
 }
