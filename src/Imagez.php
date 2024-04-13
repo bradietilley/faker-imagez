@@ -18,6 +18,8 @@ abstract class Imagez
 
     /**
      * Stores the current singleton instance
+     *
+     * @var array<string, Imagez>
      */
     protected static array $instances = [];
 
@@ -198,6 +200,8 @@ abstract class Imagez
 
     /**
      * Replace all images and reload the pool
+     *
+     * @param array<int, string> $all
      */
     public function replaceAll(array $all): static
     {

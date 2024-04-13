@@ -4,6 +4,9 @@ namespace BradieTilley\FakerImagez;
 
 class CombineImagez extends Imagez
 {
+    /**
+     * @param array<int, string> $all
+     */
     public function __construct(array $all)
     {
         $this->replaceAll($all);
@@ -20,6 +23,7 @@ class CombineImagez extends Imagez
             $all = array_merge($all, $generator->all());
         }
 
+        /** @phpstan-ignore-next-line */
         return new static($all);
     }
 
