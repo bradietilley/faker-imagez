@@ -133,6 +133,18 @@ imagez()->loadWhenEmpty();                    // Won't do anything here as there
 imagez()->load();                             // Will reload the pool of images to be the full collection of image images. 
 ```
 
+**Replace all images in the faker**
+
+You can also replace all images in the faker using the `replaceAll()` method.
+
+```php
+$all = imagez()->all();
+unset($all[23452]);                           // Say you don't like this one
+
+imagez()->replaceAll($all);
+
+imagez()->path();                             // Will never include image #23452
+```
 
 ## Roadmap
 

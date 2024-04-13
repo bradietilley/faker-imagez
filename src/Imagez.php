@@ -4,6 +4,7 @@ namespace BradieTilley\FakerImagez;
 
 use BradieTilley\FakerImagez\Exceptions\ImagezException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use SplFileInfo;
 
 abstract class Imagez
@@ -13,6 +14,8 @@ abstract class Imagez
     public const ERROR_UNABLE_TO_READ_IMAGE_CONTENTS = 'Unable to load image content at path %s';
     public const ERROR_UNABLE_TO_READ_IMAGE_DIRECTORY = 'Unable to read the source image directory at path %s';
 
+    public const SOURCE_EXTENSIONS = ['.jpg'];
+
     /**
      * Stores the current singleton instance
      */
@@ -21,14 +24,14 @@ abstract class Imagez
     /**
      * The complete set of images
      *
-     * @var array<int, string>
+     * @var array<int, string>|null
      */
     protected ?array $all = null;
 
     /**
      * The current pool of images
      *
-     * @var array<int, string>
+     * @var array<int, string>|null
      */
     protected ?array $pool = null;
 
@@ -102,7 +105,7 @@ abstract class Imagez
             $this->iterate();
         }
 
-        return $this->current ?? $this->throw(self::ERROR_UNABLE_TO_LOAD_CURRENT_PATH);
+        return $this->current ?? $this->throw(static::ERROR_UNABLE_TO_LOAD_CURRENT_PATH);
     }
 
     /**
@@ -110,7 +113,7 @@ abstract class Imagez
      */
     public function getCurrentImageContents(): string
     {
-        return file_get_contents($path = $this->getCurrentImagePath()) ?: $this->throw(sprintf(self::ERROR_UNABLE_TO_READ_IMAGE_CONTENTS, $path));
+        return file_get_contents($path = $this->getCurrentImagePath()) ?: $this->throw(sprintf(static::ERROR_UNABLE_TO_READ_IMAGE_CONTENTS, $path));
     }
 
     /**
@@ -141,10 +144,10 @@ abstract class Imagez
     {
         if ($this->all === null) {
             $path = static::absolutePath('');
-            $pics = scandir($path) ?: $this->throw(sprintf(self::ERROR_UNABLE_TO_READ_IMAGE_DIRECTORY, $path));
+            $pics = scandir($path) ?: $this->throw(sprintf(static::ERROR_UNABLE_TO_READ_IMAGE_DIRECTORY, $path));
 
             $pics = Collection::make($pics)
-                ->filter(fn (string $file) => $file !== '.' && $file !== '..')
+                ->filter(fn (string $file) => Str::endsWith($file, static::SOURCE_EXTENSIONS))
                 ->map(fn (string $file) => static::absolutePath($file))
                 ->values()
                 ->all();
@@ -193,8 +196,21 @@ abstract class Imagez
         return $this->pool;
     }
 
-    abstract public static function basePath(): string;
+    /**
+     * Replace all images and reload the pool
+     */
+    public function replaceAll(array $all): static
+    {
+        $this->all = array_values($all);
+        $this->load();
 
+        return $this;
+    }
+
+    /**
+     * Get the absolute path of the given file relative to this generator's
+     *  base path
+     */
     public static function absolutePath(string $name): string
     {
         $base = rtrim(static::basePath(), DIRECTORY_SEPARATOR);
@@ -203,8 +219,19 @@ abstract class Imagez
         return $base.DIRECTORY_SEPARATOR.$name;
     }
 
+    /**
+     * Throw an exception with the given message prefixed with the current
+     * class name.
+     *
+     * @throws ImagezException
+     */
     public function throw(string $message): never
     {
         throw ImagezException::make(sprintf('%s: %s', $this::class, $message));
     }
+
+    /**
+     * Define where this imagez generator should read its images from.
+     */
+    abstract public static function basePath(): string;
 }
